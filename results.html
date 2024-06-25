@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .search-results {
+            margin-bottom: 20px;
+        }
+
+        .search-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Results</h1>
+
+    <div id="searchResults" class="search-results">
+        <!-- Results will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Parse query parameter to get search results
+        var searchResults = [];
+        var params = new URLSearchParams(window.location.search);
+        if (params.has('search')) {
+            searchResults = JSON.parse(decodeURIComponent(params.get('search')));
+            displaySearchResults(searchResults);
+        } else {
+            // Handle no search results case
+            document.getElementById('searchResults').innerHTML = '<p>No search results found.</p>';
+        }
+
+        function displaySearchResults(results) {
+            var resultsContainer = document.getElementById('searchResults');
+            results.forEach(function(result) {
+                var resultElement = document.createElement('div');
+                resultElement.classList.add('search-item');
+                resultElement.textContent = result.name; // Display name or any other property
+                resultsContainer.appendChild(resultElement);
+            });
+        }
+    </script>
+</body>
+</html>

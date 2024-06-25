@@ -5,49 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Open Internet</title>
     <style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-header {
-    background-color: #333;
-    color: #fff;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 62px;
-    padding: 0 20px;
-    box-sizing: border-box; /* Ensures padding doesn't add to width */
-}
+        header {
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 62px;
+            padding: 0 20px;
+            box-sizing: border-box; /* Ensures padding doesn't add to width */
+        }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
+        .header-content {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
 
-.site-title {
-    margin: 0;
-}
+        .site-title {
+            margin: 0;
+        }
 
-.content {
-    margin-top: 62px; /* Ensure content starts below the fixed header */
-    padding: 20px;
-}
+        .header-buttons {
+            margin-left: auto; /* Pushes the button to the right */
+        }
 
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px; /* Rounded corners */
+            text-decoration: none; /* Remove underline from anchor */
+            display: inline-block; /* Ensures anchor behaves like a button */
+            text-align: center; /* Center text inside anchor */
+            line-height: 1; /* Fixes line height to button height */
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .content {
+            margin-top: 62px; /* Ensure content starts below the fixed header */
+            padding: 20px;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type=text] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px; /* Rounded corners */
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px; /* Rounded corners */
+        }
+
+        .search-container button:hover {
+            background-color: #0069d9;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="header-content">
             <h1 class="site-title">The Open Internet</h1>
+            <div class="header-buttons">
+                <a href="login.html" class="button">Sign Up / Log In</a>
+            </div>
         </div>
     </header>
     <div class="content">
+        <div class="search-container">
+            <input id="searchInput" type="text" placeholder="Search...">
+            <button id="searchButton" class="button">Search</button>
+        </div>
         <p>Welcome to the open internet!</p>
         <p>This is a simple example of an HTML site.</p>
     </div>
+
+    <!-- JavaScript to handle search functionality -->
+    <script>
+        document.getElementById('searchButton').addEventListener('click', function() {
+            var searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            fetch('pages.json')
+                .then(response => response.json())
+                .then(data => {
+                    var results = data.pages.filter(page => page.name.toLowerCase().includes(searchTerm));
+                    // Redirect to search results page with results as query parameter
+                    window.location.href = 'search-results.html?search=' + encodeURIComponent(JSON.stringify(results));
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    </script>
 </body>
 </html>

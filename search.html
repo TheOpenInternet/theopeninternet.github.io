@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - The Open Internet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .search-results {
+            margin-top: 20px;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .result-item h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .result-item p {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">theopeninternet</div>
+        <form class="search-form" action="https://theopeninternet.github.io/search" method="get">
+            <input class="search-input" type="text" placeholder="Search..." name="q">
+            <button class="search-button" type="submit">Search</button>
+        </form>
+        <a href="login.html" class="signup-login-button">Login/Signup</a>
+    </header>
+
+    <main>
+        <h1>Search Results for "<span id="searchQuery"></span>"</h1>
+        <div class="search-results" id="searchResults">
+            <!-- Search results will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the search query from URL parameter 'q'
+            const params = new URLSearchParams(window.location.search);
+            const searchQuery = params.get('q');
+
+            // Display the search query in the page heading
+            document.getElementById('searchQuery').textContent = searchQuery;
+
+            // Example: Fetch search results (replace with your actual data fetching logic)
+            const results = [
+                { title: 'Result 1', description: 'Description of Result 1.' },
+                { title: 'Result 2', description: 'Description of Result 2.' }
+            ];
+
+            // Generate HTML for each search result
+            const searchResultsContainer = document.getElementById('searchResults');
+            results.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                resultItem.innerHTML = `
+                    <h2>${result.title}</h2>
+                    <p>${result.description}</p>
+                `;
+                searchResultsContainer.appendChild(resultItem);
+            });
+        });
+    </script>
+</body>
+</html>

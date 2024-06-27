@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>theopeninternet</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+  }
+  header button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+  .product {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  .product h2 {
+    color: #333;
+  }
+  .product p {
+    color: #666;
+  }
+  .product .go-to-page-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  .product .go-to-page-button:hover {
+    background-color: #0056b3;
+  }
+  .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+  }
+  .popup-content {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow: auto;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  .search-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .highlight {
+    background-color: yellow;
+    font-weight: bold;
+  }
+  .main {
+    color: #000000;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button id="openSearchButton" onclick="window.location.href='theopeninternet.github.io'">theopeninternet</button><br>
+  <button id="openSearchButton" onclick="showPopup()">Search</button>
+</header>
+
+<div class="main"></div>
+
+<div class="popup" id="searchPopup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">×</span>
+    <h2>Search Items</h2>
+    <input type="text" id="searchInput" class="search-input" placeholder="aSearch items..." oninput="validateSearchInput()">
+    <button id="searchButton" class="search-button" onclick="search()">Search</button>
+    <div id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+  // Function to show the search popup
+  function showPopup() {
+    document.getElementById('searchPopup').style.display = 'flex';
+    document.getElementById('searchInput').value = '';
+    validateSearchInput();
+  }
+  
+  // Function to close the search popup
+  function closePopup() {
+    document.getElementById('searchPopup').style.display = 'none';
+  }
+  
+  // Function to validate search input and enable/disable search button
+  function validateSearchInput() {
+    var searchInput = document.getElementById('searchInput').value.trim();
+    var searchButton = document.getElementById('searchButton');
+    if (searchInput === '') {
+      searchButton.disabled = true;
+    } else {
+      searchButton.disabled = false;
+    }
+  }
+  
+  // Function to handle search and highlight matching results
+  function search() {
+    var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    var productText = document.querySelector('.product').innerHTML.trim();
+    var regex = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    var highlightedText = productText.replace(regex, '<span class="highlight">$1</span>');
+    document.querySelector('.product').innerHTML = highlightedText;
+    
+    closePopup(); // Close popup after search
+  }
+  
+  // Event listener for Ctrl+S / Command+S to show search popup
+  document.addEventListener('keydown', function(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault(); // Prevent default browser save dialog
+      showPopup();
+    }
+  });
+</script>
+
+</body>
+</html>

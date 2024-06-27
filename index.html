@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Product Page</title>
+<title>theopeninternet</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -115,16 +115,16 @@
 </header>
 
 <div class="product">
-  <h2>Coming Soon</h2>
-  <p>A description of the product that is coming soon.</p>
-  <button class="go-to-page-button">Go to Page</button>
+  <h2>Notepad</h2>
+  <p>A Normal Notepad.</p>
+  <button class="go-to-page-button" onclick="window.location.href='code.html'">Go to Page (beta)</button>
 </div>
 
 <div class="popup" id="searchPopup">
   <div class="popup-content">
     <span class="close" onclick="closePopup()">×</span>
     <h2>Search Items</h2>
-    <input type="text" id="searchInput" class="search-input" placeholder="Search items..." oninput="validateSearchInput()">
+    <input type="text" id="searchInput" class="search-input" placeholder="aSearch items..." oninput="validateSearchInput()">
     <button id="searchButton" class="search-button" onclick="search()">Search</button>
     <div id="searchResults"></div>
   </div>

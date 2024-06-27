@@ -16,6 +16,13 @@
     padding: 10px 20px;
     text-align: center;
   }
+  header button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
   .product {
     max-width: 600px;
     margin: 20px auto;
@@ -29,8 +36,19 @@
   .product p {
     color: #666;
   }
-  .buttons {
+  .product .go-to-page-button {
     margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  .product .go-to-page-button:hover {
+    background-color: #0056b3;
   }
   .popup {
     display: none;
@@ -92,13 +110,13 @@
 <body>
 
 <header>
-  <h1><a href="https://theopeninternet.github.io" target="_blank" rel="noopener noreferrer">theopeninternet</a></h1>
-  <button id="openSearchButton" onclick="showPopup()">Search</button>
+  <button id="openSearchButton" onclick="showPopup()">theopeninternet</button>
 </header>
 
 <div class="product">
   <h2>Coming Soon</h2>
   <p>A description of the product that is coming soon.</p>
+  <button class="go-to-page-button">Go to Page</button>
 </div>
 
 <div class="popup" id="searchPopup">
@@ -138,7 +156,7 @@
   // Function to handle search and highlight matching results
   function search() {
     var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-    var productText = document.querySelector('.product').innerText.trim();
+    var productText = document.querySelector('.product').innerHTML.trim();
     var regex = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
     var highlightedText = productText.replace(regex, '<span class="highlight">$1</span>');
     document.querySelector('.product').innerHTML = highlightedText;

@@ -52,6 +52,7 @@
     overflow: auto;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
   }
   .close {
     position: absolute;
@@ -59,30 +60,53 @@
     right: 10px;
     cursor: pointer;
   }
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  .search-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .highlight {
+    background-color: yellow;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
 
 <header>
   <h1><a href="https://theopendesk.github.io" target="_blank" rel="noopener noreferrer">theopendesk</a></h1>
+  <button id="openSearchButton" onclick="showPopup()">Search</button>
 </header>
 
 <div class="product">
   <h2>Coming Soon</h2>
   <p>A description of the product that is coming soon.</p>
-  
-  <div class="buttons">
-    <button id="goButton">Go</button>
-    <button id="searchButton">Search</button>
-  </div>
 </div>
 
 <div class="popup" id="searchPopup">
   <div class="popup-content">
     <span class="close" onclick="closePopup()">×</span>
     <h2>Search Items</h2>
-    <input type="text" id="searchInput" placeholder="Search items...">
-    <button onclick="search()">Search</button>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search items..." oninput="validateSearchInput()">
+    <button id="searchButton" class="search-button" onclick="search()">Search</button>
     <div id="searchResults"></div>
   </div>
 </div>
@@ -91,6 +115,8 @@
   // Function to show the search popup
   function showPopup() {
     document.getElementById('searchPopup').style.display = 'flex';
+    document.getElementById('searchInput').value = '';
+    validateSearchInput();
   }
   
   // Function to close the search popup
@@ -98,11 +124,26 @@
     document.getElementById('searchPopup').style.display = 'none';
   }
   
-  // Function to handle search (dummy function)
+  // Function to validate search input and enable/disable search button
+  function validateSearchInput() {
+    var searchInput = document.getElementById('searchInput').value.trim();
+    var searchButton = document.getElementById('searchButton');
+    if (searchInput === '') {
+      searchButton.disabled = true;
+    } else {
+      searchButton.disabled = false;
+    }
+  }
+  
+  // Function to handle search and highlight matching results
   function search() {
-    var searchTerm = document.getElementById('searchInput').value;
-    // Here you would perform actual search logic, for demonstration we just show a message
-    document.getElementById('searchResults').innerHTML = `Searching for '${searchTerm}'...`;
+    var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    var productText = document.querySelector('.product').innerText.trim();
+    var regex = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    var highlightedText = productText.replace(regex, '<span class="highlight">$1</span>');
+    document.querySelector('.product').innerHTML = highlightedText;
+    
+    closePopup(); // Close popup after search
   }
   
   // Event listener for Ctrl+S / Command+S to show search popup
@@ -111,15 +152,6 @@
       event.preventDefault(); // Prevent default browser save dialog
       showPopup();
     }
-  });
-  
-  // Event listeners for buttons
-  document.getElementById('goButton').addEventListener('click', function() {
-    alert('Go button clicked! Implement your functionality here.');
-  });
-  
-  document.getElementById('searchButton').addEventListener('click', function() {
-    showPopup();
   });
 </script>
 

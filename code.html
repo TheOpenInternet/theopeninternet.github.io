@@ -117,7 +117,213 @@
   <button id="openSearchButton" onclick="showPopup()">Search</button>
 </header>
 
-<div class="main"></div>
+<div class="main">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.toolbar {
+    padding: 10px;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.popup input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#editor {
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button id="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
+        <button id="load-btn" onclick="openLoadPopup()">Load</button>
+        
+        <input type="checkbox" id="wordwrap-checkbox" onchange="toggleWordWrap()">Word Wrap
+    </div>
+    <div id="editor" contenteditable="true">
+        <!-- Your markdown content goes here -->
+    </div>
+    
+
+    <!-- Save Popup -->
+<div id="save-popup" class="popup">
+  <input type="text" id="filename-input" placeholder="Enter filename">
+  <button onclick="saveFile()">Download</button>
+  
+  <button onclick="discardPopup()">Discard</button>
+</div>
+
+<!-- Load Popup -->
+<div id="load-popup" class="popup">
+  <input type="file" id="file-input" accept=".md">
+  <button onclick="loadFile()">Open</button>
+  <button onclick="discardPopup()">Discard</button>
+</div>
+
+
+
+    <!-- Rename Popup -->
+    <div id="rename-popup" class="popup">
+        <input type="text" id="newname-input" placeholder="Enter new name">
+        <button onclick="renameFile()">Apply</button>
+        <button onclick="discardPopup()">Discard</button>
+    </div>
+
+    <script>
+     // Save File locally
+  function saveFilein() {
+    let markdownContent = document.getElementById('editor').innerText;
+    let filename = document.getElementById('filename-input').value;
+    localStorage.setItem(filename, markdownContent);
+    alert(`File saved locally as ${filename}.md`);
+  }
+
+  // Load Popup
+  function openLoadPopup() {
+    document.getElementById('load-popup').style.display = 'block';
+    let localFiles = localStorage.keys();
+    let filesHtml = '';
+    for (let i = 0; i < localFiles.length; i++) {
+      filesHtml += `<p>${localFiles[i]} <button onclick="deleteLocalFile('${localFiles[i]}')">Delete</button></p>`;
+    }
+    document.getElementById('local-files').innerHTML = filesHtml;
+  }
+
+  // Delete Local File
+  function deleteLocalFile(filename) {
+    localStorage.removeItem(filename);
+    openLoadPopup(); // refresh the list
+  }
+
+  // Load from Local
+  function loadLocalFile(filename) {
+    let markdownContent = localStorage.getItem(filename);
+    document.getElementById('editor').innerText = markdownContent;
+    closePopup('load-popup');
+  }
+    // Full Screen Mode
+function toggleFullScreen() {
+    let elem = document.documentElement;
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+            alert(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+// Save Popup
+function openSavePopup() {
+    document.getElementById('save-popup').style.display = 'block';
+}
+
+function saveFile() {
+    let filename = document.getElementById('filename-input').value;
+    // Implement saving functionality (e.g., using Blob, FileSaver.js)
+    // Example:
+    // let markdownContent = document.getElementById('editor').innerText;
+    // let blob = new Blob([markdownContent], { type: 'text/markdown' });
+    // saveAs(blob, filename + '.md');
+    closePopup('save-popup');
+}
+
+// Load Popup
+function openLoadPopup() {
+    document.getElementById('load-popup').style.display = 'block';
+}
+
+function loadFile() {
+    // Implement file loading functionality from computer
+    closePopup('load-popup');
+}
+
+function loadLocal() {
+    // Implement loading from local storage or previously saved files
+    closePopup('load-popup');
+}
+
+// Rename Popup
+function openRenamePopup() {
+    document.getElementById('rename-popup').style.display = 'block';
+}
+
+function renameFile() {
+    let newFilename = document.getElementById('newname-input').value;
+    // Implement renaming functionality
+    closePopup('rename-popup');
+}
+
+// Word Wrap (Live)
+function toggleWordWrap() {
+    let editor = document.getElementById('editor');
+    editor.style.whiteSpace = document.getElementById('wordwrap-checkbox').checked ? 'pre-wrap' : 'pre';
+}
+
+// Utility function to close popups
+function discardPopup() {
+    closePopup('save-popup');
+    closePopup('load-popup');
+    closePopup('rename-popup');
+}
+
+function closePopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+}
+// Save File
+  function saveFile() {
+    let filename = document.getElementById('filename-input').value;
+    let markdownContent = document.getElementById('editor').innerText;
+    let blob = new Blob([markdownContent], { type: 'text/markdown' });
+    closePopup('save-popup');
+  }
+
+  // Load File
+  function loadFile() {
+    let fileInput = document.getElementById('file-input');
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      let markdownContent = e.target.result;
+      document.getElementById('editor').innerText = markdownContent;
+    };
+    reader.readAsText(file);
+    closePopup('load-popup');
+  }
+    </script>
+</body>
+</div>
 
 <div class="popup" id="searchPopup">
   <div class="popup-content">
